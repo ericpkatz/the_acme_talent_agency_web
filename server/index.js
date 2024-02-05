@@ -40,6 +40,16 @@ app.get('/api/users/:id/userSkills', async(req, res, next)=> {
   }
 });
 
+app.delete('/api/users/:userId/userSkills/:id', async(req, res, next)=> {
+  try {
+    await deleteUserSkill({ user_id: req.params.userId, id: req.params.id });
+    res.sendStatus(204);
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
 app.post('/api/users/:id/userSkills', async(req, res, next)=> {
   try {
     res.status(201).send(await createUserSkill({user_id: req.params.id, skill_id: req.body.skill_id}));
@@ -82,6 +92,7 @@ const init = async()=> {
   console.log(`curl localhost:3000/api/users/${ethyl.id}/userSkills`);
 
   console.log(`curl -X POST localhost:3000/api/users/${ethyl.id}/userSkills -d '{"skill_id": "${dancing.id}"}' -H 'Content-Type:application/json'`);
+  console.log(`curl -X DELETE localhost:3000/api/users/${ethyl.id}/userSkills/skill_id_here`);
   
   console.log('data seeded');
 
