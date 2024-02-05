@@ -2,7 +2,9 @@ const {
   client,
   createTables,
   createUser,
-  createSkill
+  createSkill,
+  fetchUsers,
+  fetchSkills
 } = require('./db');
 
 const init = async()=> {
@@ -21,6 +23,9 @@ const init = async()=> {
     createSkill({ name: 'plate spinning'}),
     createSkill({ name: 'juggling'})
   ]);
+
+  console.log(await fetchUsers());
+  console.log(await fetchSkills());
 
 }
 init();
