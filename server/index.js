@@ -6,7 +6,8 @@ const {
   fetchUsers,
   fetchSkills,
   createUserSkill,
-  fetchUserSkills
+  fetchUserSkills,
+  deleteUserSkill
 } = require('./db');
 
 const init = async()=> {
@@ -34,6 +35,8 @@ const init = async()=> {
     createUserSkill({ user_id: moe.id, skill_id: dancing.id}),
     createUserSkill({ user_id: ethyl.id, skill_id: singing.id})
   ]);
+  console.log(await fetchUserSkills(moe.id));
+  await deleteUserSkill({ user_id: moe.id, id: userSkills[0].id});
   console.log(await fetchUserSkills(moe.id));
 
 }
