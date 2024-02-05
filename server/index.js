@@ -11,6 +11,7 @@ const {
 } = require('./db');
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 app.get('/api/skills', async(req, res, next)=> {
   try {
@@ -33,6 +34,15 @@ app.get('/api/users', async(req, res, next)=> {
 app.get('/api/users/:id/userSkills', async(req, res, next)=> {
   try {
     res.send(await fetchUserSkills(req.params.id));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
+app.post('/api/users/:id/userSkills', async(req, res, next)=> {
+  try {
+    res.status(201).send(await createUserSkill({user_id: req.params.id, skill_id: req.body.skill_id}));
   }
   catch(ex){
     next(ex);
@@ -70,6 +80,8 @@ const init = async()=> {
   console.log(await fetchUserSkills(moe.id));
 
   console.log(`curl localhost:3000/api/users/${ethyl.id}/userSkills`);
+
+  console.log(`curl -X POST localhost:3000/api/users/${ethyl.id}/userSkills -d '{"skill_id": "${dancing.id}"}' -H 'Content-Type:application/json'`);
   
   console.log('data seeded');
 
