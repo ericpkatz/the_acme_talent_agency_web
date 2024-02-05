@@ -18,7 +18,8 @@ const createTables = async()=> {
     CREATE TABLE user_skills(
       id UUID PRIMARY KEY,
       user_id UUID REFERENCES users(id) NOT NULL,
-      skill_id UUID REFERENCES skills(id) NOT NULL
+      skill_id UUID REFERENCES skills(id) NOT NULL,
+      CONSTRAINT unique_user_id_skill_id UNIQUE (user_id, skill_id)
     );
   `;
   await client.query(SQL);
