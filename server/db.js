@@ -1,6 +1,7 @@
 const pg = require('pg');
 const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/acme_travel_agency_db');
 const uuid = require('uuid');
+const bcrypt = require('bcrypt');
 
 const createTables = async()=> {
   const SQL = `
@@ -10,7 +11,7 @@ const createTables = async()=> {
     CREATE TABLE users(
       id UUID PRIMARY KEY,
       username VARCHAR(20) NOT NULL UNIQUE,
-      password VARCHAR(20) NOT NULL
+      password VARCHAR(255) NOT NULL
     );
     CREATE TABLE skills(
       id UUID PRIMARY KEY,
@@ -31,7 +32,7 @@ const createUser = async({ username, password })=> {
   const SQL = `
     INSERT INTO users(id, username, password) VALUES($1, $2, $3) RETURNING *
   `;
-  const response = await client.query(SQL, [ uuid.v4(), username, password]);
+  const response = await client.query(SQL, [ uuid.v4(), username, await bcrypt.hash(password, 5)]);
   return response.rows[0];
 };
 
@@ -45,7 +46,7 @@ const createSkill = async({ name })=> {
 
 const fetchUsers = async()=> {
   const SQL = `
-    SELECT *
+    SELECT id, username 
     FROM users
   `;
   const response = await client.query(SQL);
